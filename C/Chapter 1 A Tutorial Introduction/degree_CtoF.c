@@ -7,7 +7,9 @@
 int main()
 {
 	float farh, celsius;
-	float lower, upper, step;
+
+    
+    printf("FAHRENHEIT TO CELSIUS\n");
 
 	farh = LOWER;
 	while(farh <= UPPER)
