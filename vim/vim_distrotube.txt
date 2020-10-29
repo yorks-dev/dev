@@ -1,0 +1,59 @@
+===============================================
+=		 VIM TUTORIAL		      =
+===============================================
+1. For moving around use the "h,j,k,l" keys.
+	   
+	       k		
+       <- h        l ->
+	       j		NEVER USE THE ARROW KEYS.
+
+------------------
+2. SAVE AND QUIT
+------------------
+    :q!   -> Exit without saving.
+     
+------------------
+3. TEXT EDITING
+------------------
+    i    -> INSERT Mode.
+    ESC  -> NORMAL Mode.
+    v    -> VISUAL Mode.
+    gg   -> TOP of the File.
+    G    -> END of the File.
+    2G   -> Takes to 2nd Line.
+    0    -> To the First Char of line. 
+    x    -> delete char
+    dw   -> delete word.
+    d$   -> deletes the entoire line from the cursor point.
+    u    -> undo     
+  ctrl+r -> redo 
+    dd   -> delete line.
+    2W   -> move word by word (2 word) (1st char) (Ignore Punct)
+    E    -> move word by word (last char) (Ignore punct)
+    B    -> backward to previous word. (Ignore punct)
+    p    -> Put deleted or copied text. 
+    r[CHAR] -> replace a char - eg : ri  replaces the char with i.
+    ce   -> automatically into the INSERT MODE and deletes the word
+    c$   -> deletes entire line and places into INSERT.  
+    C    -> deletes the entire line and puts into INSERT MODE. 
+    f[CHAR] -> takes me to the first instance of the CHAR in the Line. 
+    F[CHAR] -> Reverse f.
+    t[CHAR] -> Places the cursor before the f.
+    T[CHAR] -> Reverse t.
+    A  -> TAkes to the end of the line. 
+    s  -> deletes the char and INSERT mode.
+    S  -> deletes the entire line and INSERT MODE.
+    o  -> Creates a new line below and INSERT MODE.
+    O  -> Creates a new line above and INSERT MODE.
+    y  -> Copy. 
+    yd -> Copy the word.
+    y$ -> Yanks Cursor to end of line
+    yy -> Copies the entire line.
+    %  -> Takes me to the parenthesis in the line.
+
+----------------
+4. SEARCHING
+----------------
+    /   -> searches forward.
+    ?   -> search backwards.
+
