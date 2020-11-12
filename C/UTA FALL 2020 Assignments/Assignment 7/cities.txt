@@ -1,0 +1,51 @@
+Tokyo, Japan
+Delhi, India
+Shanghai, China
+Sao Paulo, Brazil
+Mexico City, Mexico
+Cairo, Egypt
+Mumbai, India
+Beijing, China
+Dhaka, Bangladesh
+Osaka, Japan
+New York City, USA
+Karachi, Pakistan
+Buenos Aires, Argentina
+Chongqing, China
+Istanbul, Turkey
+Kolkata, India
+Manila, Philippines
+Lagos, Nigeria
+Rio de Janeiro, Brazil
+Tianjin, China
+Kinshasa, DR Congo
+Guangzhou, China
+Los Angeles, USA
+Moscow, Russia
+Shenzhen, China
+Lahore, Pakistan
+Bangalore, India
+Paris, France
+Bogota, Colombia
+Jakarta, Indonesia
+Chennai, India
+Lima, Peru
+Bangkok, Thailand
+Seoul, South Korea
+Nagoya, Japan
+Hyderabad, India
+London, United Kingdom
+Tehran, Iran
+Chicago, USA
+Chengdu, China
+Nanjing, China
+Wuhan, China
+Ho Chi Minh City, Vietnam
+Luanda, Angola
+Ahmedabad, India
+Kuala Lumpur, Malaysia
+Xi'an, China
+Hong Kong, China
+Dongguan, China
+Hangzhou, China
+END
