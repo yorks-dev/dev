@@ -63,7 +63,7 @@ int main()
 {
 	int seed;
     
-	printf("Enter number of seed (int): ");
+	printf("Enter seed value (int): ");
     scanf("%d", &seed);   
 
 	getchar();

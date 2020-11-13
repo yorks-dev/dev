@@ -11,8 +11,7 @@ int main(void) {
 	//fpointer = fopen("cities.txt", "r");
 	
 	char arr[MAX_ROW][MAX_COL]=  {0};	
-	char ch;
-	int row = 0, col = 0;
+	int row = 0;
 	
 	while( fgets(arr[row], MAX_COL, stdin) ) {
 		arr[row][strlen(arr[row]) - 1] = '\0';
