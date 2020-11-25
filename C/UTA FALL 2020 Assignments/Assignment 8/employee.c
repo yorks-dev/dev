@@ -85,8 +85,13 @@ int find_employee(char employee_db[][NUM_EMPLOYEE_DATA][MAX_LEN], char employee_
     return -1;
 }
 
+/*
 
- 
+int main() {
+    printf("Works Fine !\n");
+}
+
+*/
 
 
 

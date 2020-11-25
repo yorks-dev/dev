@@ -86,6 +86,6 @@ int main() {
 
     // list_customer_test();
     // add_customer_test();
-    get_customer_test();
-    // find_customer_test();
+    // get_customer_test();
+    find_customer_test();
 }

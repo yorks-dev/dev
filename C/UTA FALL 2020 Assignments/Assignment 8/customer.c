@@ -47,7 +47,7 @@ int add_customer(char customer_db[][NUM_CUSTOMER_DATA][MAX_LEN], int num_custome
             strcpy(temp_item[1], buffer);
         }
 
-        printf("Enter Phone: ");
+        printf("Enter Phone Number: ");
         fgets(buffer, BUFFER_SIZE, stdin);
         remove_newline(buffer);
         strcpy(temp_item[2], buffer);
