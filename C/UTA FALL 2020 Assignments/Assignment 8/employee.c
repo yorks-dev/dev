@@ -1,6 +1,6 @@
 #include "employee.h"
 
-void list_item(char item[][MAX_LEN]) {
+void list_item_emp(char item[][MAX_LEN]) {
 	printf("%-6s %-20.20s %-8s\n",
 			item[0], item[1], item[2]);
 }
@@ -11,7 +11,7 @@ void list_employee(char employee_db[][NUM_EMPLOYEE_DATA][MAX_LEN], int num_emplo
     printf("------------------------------------------\n");
 
     for (int i = 0; i < num_employee; i++) {
-		list_item(employee_db[i]);
+		list_item_emp(employee_db[i]);
 	}
 }
 
@@ -47,7 +47,7 @@ int add_employee(char employee_db[][NUM_EMPLOYEE_DATA][MAX_LEN], int num_employe
             strcpy(temp_item[1], buffer);
         }
 
-        printf("Enter TITLE: ");
+        printf("Enter Title: ");
         fgets(buffer, BUFFER_SIZE, stdin);
         remove_newline(buffer);
         strcpy(temp_item[2], buffer);
@@ -84,14 +84,5 @@ int find_employee(char employee_db[][NUM_EMPLOYEE_DATA][MAX_LEN], char employee_
     }
     return -1;
 }
-
-/*
-
-int main() {
-    printf("Works Fine !\n");
-}
-
-*/
-
 
 

@@ -1,17 +1,16 @@
 #include "customer.h"
 
-void list_item(char item[][MAX_LEN]) {
+void list_item_cust(char item[][MAX_LEN]) {
 	printf("%-6s %-20.20s %-8s\n",
 			item[0], item[1], item[2]);
 }
 
 void list_customer(char customer_db[][NUM_CUSTOMER_DATA][MAX_LEN], int num_customer) {
-    // Print Header
     printf("%-6s %-20s %-8s\n", "ID", "NAME", "PHONE");    
     printf("------------------------------------------\n");
 
     for (int i = 0; i < num_customer; i++) {
-		list_item(customer_db[i]);
+		list_item_cust(customer_db[i]);
 	}
 }
 

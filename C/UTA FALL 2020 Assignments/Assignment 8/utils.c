@@ -1,4 +1,7 @@
 #include "utils.h"
+#include <stdio.h>
+
+
 
 int remove_newline(char str[]) {
 	int length = strlen(str);
