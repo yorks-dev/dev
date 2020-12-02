@@ -1,0 +1,6 @@
+{
+    "files.associations": {
+        "ratio": "c",
+        "string_view": "c"
+    }
+}
