@@ -1,9 +1,9 @@
 THE NUMBERS ARE : 
 1
--2
+2
 3
 FOUR
 5
 SIX
--7
--2
+7
+2

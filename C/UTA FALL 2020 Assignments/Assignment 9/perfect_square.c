@@ -1,3 +1,7 @@
+// COMPILE WITH
+// 💕  gcc -Wall perfect_square.c -lm   
+// Run with numbers.txt
+
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>

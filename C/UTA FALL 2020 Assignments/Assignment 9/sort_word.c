@@ -1,3 +1,5 @@
+// Run with word_list.txt
+
 #include <stdio.h>
 #include <string.h>
 #define BUFFER_MAX 1024
@@ -37,7 +39,6 @@ int main() {
     { 
         strcpy(temp, words[i]); 
   
-        // Insert s[j] at its correct position 
         int j = i - 1; 
         while (j >= 0 && strlen(temp) < strlen(words[j])) 
         { 
