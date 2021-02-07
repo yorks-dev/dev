@@ -1,0 +1,103 @@
+#######################################################
+####   MANJARO KDE SETUP   #### AUTHOR : AYUSH DUTTA ##
+###############################       ___    ____    ##
+##          VERSION          ##      /   |  / __ \   ##
+##  $ kf5-config --version   ##     / /| | / / / /   ##
+##  Qt: 5.15.2               ##    / ___ |/ /_/ /    ##
+##  KDE Frameworks: 5.77.0   ##   /_/  |_/_____/     ##
+##  kf5-config: 1.0          ##                      ##
+#######################################################     
+
+
+####################
+A.  INITIAL SETUP
+####################
+
+-------------------------------------------------
+1. INSTALL "yay" - PACKAGE MANAGER USING PACMAN.
+-------------------------------------------------
+>  $sudo pacman -Syu yay
+
+
+#########################
+B.  TERMINAL EMULATOR
+#########################
+
+    We will use "Termite".
+
+--------------
+1. INSTALL : 
+--------------
+$ yay -S termite
+
+--------------------------------------------------
+2. INSTALL "termite-style" (for theming  termite)
+--------------------------------------------------
+Web : https://github.com/adi1090x/termite-style#how-to-install
+    > THEME : "dracula"
+    > FONT  : "ProFont", 19
+
+#########################
+C.  SHELL & KEYBOARD 
+#########################
+
+------------------
+1. INSTALL ZSH :
+------------------
+>  $ sudo pacman -S zsh
+
+--------------------------
+2.  CHANGE SHELL TO ZSH : 
+--------------------------
+>  $ chsh -s $(which zsh) // for local user
+>  $ sudo chsh -s $(which zsh)  // for root user
+
+---------------------------------------
+3. INSTALL "zsh-autosuggestions-git" :
+---------------------------------------
+>  $ yay -S zsh-autosuggestions-git 
+
+    > Then change folder name of /usr/share/zsh/plugins/zsh-autosuggestions-git/ to /usr/share/zsh/plugins/zsh-autosuggestions/
+
+--------------------------------
+3.1 DISABLE KEYBOARD (INTERNAL)
+--------------------------------
+>  $ xinput LIST
+>  Look at id of AT Translated Set 2 Keyboars = 16
+>  $ xinout float 16
+
+------------------------------
+4. INSTALL "starship" THEME :
+------------------------------
+>  $ yay -S starship
+>  Add the following to the end of ~/.zshrc:
+        eval "$(starship init zsh)"
+
+##############################
+D.    CONFIGURE STARSHIP
+##############################
+
+
+###################
+G.    FIREFOX
+###################
+
+###################
+H. GITHUB SETUP
+###################
+> INSTALL github-cli from AUR
+> $ yay -S github-cli
+
+-------------
+1. CONFIGURE
+-------------
+> gh auth login    # linking github
+> Setup ssh with github.
+  > install xclip   > yay -S xclip
+  > xclip the ssh pubid into github.
+
+--------------
+2. DECORATION
+--------------
+> In spaceship change the github icon with Maple 🍁 emoji.  
+
