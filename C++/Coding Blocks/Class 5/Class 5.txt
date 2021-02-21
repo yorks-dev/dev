@@ -1,0 +1,44 @@
+ 
+1. Bubble Sort
+----------------
+
+[5, 1, 2, 3, 4]
+
+After 1st itration, the largest will get to the last index which is (n - 1);
+
+1st Itration :
+[1, 5, 2, 3, 4]
+[1, 2, 5, 3, 4]
+[1, 2, 3, 5, 4]
+[1, 2, 3, 4, 5]   So we get 5(largest) at last index.
+
+Next time we will iterate till (n - 2), because we dont need to awap the last two index as the last one
+is already largest.
+
+2nd iteration :
+We iterate till (n - 2)
+
+3rd iteration till (n - 3) and so on...
+
+so our outer loop will go from 0 -> (n - 1 - i) [not included]
+
+> for(int i = 0; i < (n - 1 - i); i++)
+
+
+THEN : after each iteration of i we will set flag to true if there is atleast one swapping.
+then if after iteration ends and we see flag = false (which is no iteration) then we know that Array 
+already sorted. Thus we break out.
+
+INNER LOOP : j = 0 -> 
+
+
+
+2. Selection Sort :
+
+Go from index 0 -> ( n - 1) [not included]
+
+from in dex  i + 1 find the minimun in the rest of  the array and 
+swap it with the i'th one.
+
+
+

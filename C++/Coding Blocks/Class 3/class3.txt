@@ -1,3 +1,8 @@
 1.  if(non zero) -> True
     if(0) -> False
     
+2. Continue Statement 
+-----------------------
+> It skips the statements after the Continue Statement.
+
+3. sizeof(int) -> 4
