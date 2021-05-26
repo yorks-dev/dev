@@ -1,6 +1,11 @@
 {
     "files.associations": {
         "creature.h": "c",
-        "string.h": "c"
+        "string.h": "c",
+        "ll_utils.h": "c",
+        "typeinfo": "c",
+        "ranges": "c",
+        "cstdlib": "c",
+        "future": "c"
     }
 }
