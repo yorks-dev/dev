@@ -15,7 +15,7 @@
 # To ans is( 2+1)/2 = 1.5
 
 import numpy as np, itertools
-    
+
 def max_calc(rec_list):  
     sum_of_ifs = 0
     
