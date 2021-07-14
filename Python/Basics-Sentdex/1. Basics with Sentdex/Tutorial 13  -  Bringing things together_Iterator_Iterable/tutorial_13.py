@@ -98,6 +98,7 @@ while play == True:
                     raise Exception(Fore.RED + "Invalid Entry !! That sopt has already been played by your oponent !!".upper())
 
             except Exception as e:
+                # if type(e) == TypeError:
                 if type(e) == TypeError:
                     print(Fore.RED + "Column Entry invalid - You must play inside the board !! LOL".upper())
                 else:
@@ -105,8 +106,7 @@ while play == True:
                 next_player = False
                 continue
 
-            game_board(game, i[1], row_ent, col_ent)  #i[1] is the char 'O' or 'X'
-
+            # game_board(game, i[1], row_ent, col_ent)  #i[1] is the char 'O' or 'X'
             winner_found = win(game)[0]
             if (winner_found == True):
                 print(Fore.YELLOW + "----------------------------------------")
