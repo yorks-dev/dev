@@ -11,6 +11,7 @@ struct car
 void set_price(struct car *car_name, double new_price)
 {
 	// (*car_name).price = new_price;    both works
+	
 	car_name->price = new_price; // only works on pointer to struct
 }
 
