@@ -51,5 +51,5 @@ for key, value in data:
 
 print(keys)
 
-ghghg
-
+def _hello():
+    print('hello')
