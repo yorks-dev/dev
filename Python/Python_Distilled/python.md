@@ -241,7 +241,7 @@ s = { sets[0] for sets in portfolio }
 | a.add('Hello')                | Single item add                             |
 | a.update('hello', 'hi', 'yo') | Add multiple items                          |
 | t.remove('IBM')               | Remove 'IBM' or raise KeyError if absent. |
-| s.discard('SCOX')             |  Remove 'SCOX' if it exists.                                            |
+| s.discard('SCOX')             |   Remove 'SCOX' if it exists.                                            |
 
 
 ### 6. Dictionaries
