@@ -236,12 +236,13 @@ s = { sets[0] for sets in portfolio }
 
 **Symetric Difference** - items that are in either s or t but not in both.
 
-| Operation                     | Explaination                                         |
-| ----------------------------- | ------------------------------------------- |
-| a.add('Hello')                | Single item add                             |
-| a.update('hello', 'hi', 'yo') | Add multiple items                          |
+| Operation                     | Explaination                              |
+| ----------------------------- | ----------------------------------------- |
+| a.add('Hello')                | Single item add                           |
+| a.update('hello', 'hi', 'yo') | Add multiple items                        |
 | t.remove('IBM')               | Remove 'IBM' or raise KeyError if absent. |
-| s.discard('SCOX')             |   Remove 'SCOX' if it exists.                                            |
+| s.discard('SCOX')             | Remove 'SCOX' if it exists.               |
+|                               |                                           |
 
 
 ### 6. Dictionaries
@@ -290,3 +291,4 @@ for name, shares, _ in portfolio:
     total_shares[name] += shares
 # total_shares = {'IBM': 125, 'ACME': 50, 'PHP': 40}
 ```
+

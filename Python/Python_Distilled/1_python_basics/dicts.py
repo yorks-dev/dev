@@ -33,3 +33,22 @@ for name, shares, _ in portfolio:
 # total_shares = {'IBM': 125, 'ACME': 50, 'PHP': 40}
 
 print(total_shares)
+
+
+data = [
+    ('A', 10),
+    ('B', 20),
+    ('C', 10),
+    ('A', 15),
+    ('C', 12)
+]
+
+keys = {line[0]:0 for line in data}  #getting unique keys
+print(keys)
+
+for key, value in data:
+    keys[key] += value
+
+print(keys)
+
+
