@@ -19,11 +19,9 @@ int main(){
 
     printf("Enter string : ");
     char string[1024];
-    scanf("%s", string);
+    scanf("%s", string); 
     printf("Length : %d\n", my_strlen(string));
-
-    int a[5] = {0};
-    a[6] = 1;
+    
 }
 
 

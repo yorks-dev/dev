@@ -1,4 +1,4 @@
-r Chapter 2 : Hello World!  
+# Chapter 2 : Hello World!  
 
 
 ``` c
@@ -94,7 +94,7 @@ printf("%c\n", *s_alt);   <- also prints out 'H'
 
 > **NOTE** : If you have a pointer to a string literal, don’t try to change it (un-mutatable). And if you use a string in double quotes to initialize an array, that’s not actually a string literal. You can mutate it.
 
-``strlen()`` - length of string. Must include ``#include <string.h>``
+`strlen()` - length of string. Must include ``#include <string.h>``
 
 ``"Dog\n"`` is basically ``[D] [o] [g] [\n] [\0]``. ``\0`` is the zero-valued byte, which is the terminating character in the string.
 
@@ -300,7 +300,46 @@ void *my_memcpy(void *dest, void *src, int byte_count) {
 }
 ```
 
+> **Now that we’ve done that, I just want to quickly point out that we can use this technique to iterate over the
+bytes of any object in C, floats, structs, or anything!**
+
+<br>
+
 #### Quick Sort
 
-// TODO
-// TODO
+Quicksort can sort any type of data thanks to `void *` pointers. Quicksort just needs the array to be sorted, number of elements, size of each element, and a **compare function**.
+
+```c
+    qsort(animals, 4, sizeof(struct animal), compare);
+```
+
+This is a comparison function called by qsort() to help it determine what exactly to sort by. We'll use it to sort an array of struct animals by leg_count.
+
+```c
+int compare(const void *elem1, const void *elem2){
+
+    // now we know that elem1 and elem2 are struct pointer 
+    // So we convert them so that we can dereference them later on
+    const struct animal *animal1 = elem1;
+    const struct animal *animal2 = elem2;
+
+    if(animal1->leg_count < animal2->leg_count)
+        return -1;
+    
+    if(animal1->leg_count > animal2->leg_count)
+        return 1;
+    
+    return 0;
+}
+```
+
+
+-----------------------------------------------------------------
+# Chapter 12 : Manual Memory Allocation
+
+If you manually allocated it, you have to manually free it when you’re done with it.
+
+> In common C parlance, devs say that **automatic local variables are allocated “on the stack”**, and **manually- allocated memory is “on the heap”**.
+
+
+

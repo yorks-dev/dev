@@ -8,12 +8,12 @@ int main(void)
     int linecount = 0;
 
     fp = fopen("./txtFiles/lines.txt", "r");
-
+    
     while(fgets(s, MAX_BUFFER, fp) != NULL){
         printf("%d: %s", ++linecount, s);
     }
-  
-    int a[5] = {0};
-    a[7] = 9;
-    return 0;
-}
+
+    int a[5] = {0, 1, 2, 3, 4};
+    a[4] = 5;
+    a[12] = "77";  
+} 

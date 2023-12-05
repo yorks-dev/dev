@@ -22,5 +22,4 @@ int main(){
     printf("Name : %s, Age : %d, Roll : %d\n", student1.name, student1.age, student1.roll);
     change_roll(&student1, 10);
     printf("Name : %s, Age : %d, Roll : %d\n", student1.name, student1.age, student1.roll);
-
 }

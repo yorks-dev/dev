@@ -13,5 +13,6 @@ void *my_memcpy(void *dest, void *src, int byte_count){
     // Most of these functions return the destination, just in case 
     // that's useful to the caller.
     return dest;
+
 }
 
