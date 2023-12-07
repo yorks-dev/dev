@@ -1,3 +1,6 @@
+#  get() function
+
+from collections import Counter
 
 s = {
     'name' : 'GOOG',
@@ -12,6 +15,9 @@ if s.get('S&P500') ==  False:
     s['S&P500'] = True
 
 print(s)
+
+
+# Tuples and dicts
 
 prices = { }
 prices[('IBM', '2015-02-03')] = 91.23
@@ -35,21 +41,11 @@ for name, shares, _ in portfolio:
 print(total_shares)
 
 
-data = [
-    ('A', 10),
-    ('B', 20),
-    ('C', 10),
-    ('A', 15),
-    ('C', 12)
-]
+# Implementing Counter() instead of using dict to count
+total_shares2 = Counter()
 
-keys = {line[0]:0 for line in data}  #getting unique keys
-print(keys)
+for name, shares, _ in portfolio:
+    total_shares2[name] += shares
 
-for key, value in data:
-    keys[key] += value
+print(total_shares2)
 
-print(keys)
-
-def _hello():
-    print('hello')

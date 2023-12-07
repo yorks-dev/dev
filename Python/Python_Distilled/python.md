@@ -2,15 +2,19 @@
 ## PROGRESS TRACKING
 
 - [CHAPTER 1 : PYTHON BASICS](#chapter-1--python-basics)
-    - [1. Text Strings :](#1-text-strings-)
-    - [2. FILE IO](#2-file-io)
+  - [1.1 Text Strings :](#11-text-strings-)
+  - [1.2. FILE IO](#12-file-io)
         - [Reading Files](#reading-files)
         - [Writing Files](#writing-files)
-    - [3. Lists](#3-lists)
+  - [1.3. Lists](#13-lists)
       - [Sample FILE IO Code](#sample-file-io-code)
-    - [4. Tuples](#4-tuples)
-    - [5. Sets](#5-sets)
-    - [6. Dictionaries](#6-dictionaries)
+  - [1.4. Tuples](#14-tuples)
+  - [1.5. Sets](#15-sets)
+  - [1.6. Dictionaries](#16-dictionaries)
+  - [1.7 Exceptions](#17-exceptions)
+  - [1.8 Object and Classes](#18-object-and-classes)
+      - [Inheritance](#inheritance)
+  - [1.9 Modules](#19-modules)
 
 
 
@@ -51,7 +55,7 @@ while((x := x+1) < 10):
 - The `continue` statement skips the rest of the loop body.
 - `''' xyz '''` is multiline comment, which captures all string in between
 
-### 1. Text Strings :
+## 1.1 Text Strings :
 
 - `fstrings**`:
  ```python
@@ -94,7 +98,7 @@ output :
 > "10.24"
 > "10.24"
 
-### 2. FILE IO
+## 1.2. FILE IO
 
 open(FILE) returns a `file oject`
 ##### Reading Files
@@ -139,7 +143,7 @@ name = input("What is your name")
 print("hello", name)
 ```
 
-### 3. Lists
+## 1.3. Lists
 
 ```py
 names = ['Dave', 'Paula', 'Thomas', 'Lewis']
@@ -176,7 +180,7 @@ total = sum([int(row[0]) * float(row[1])  for row in rows])
 print(f"SUM : {total}")
 ```
 
-### 4. Tuples
+## 1.4. Tuples
 
 **`immutable`**
 
@@ -209,7 +213,7 @@ for _, shares, price in portfolio:
 print(f"Total portfolio : {total}")
 ```
 
-### 5. Sets
+## 1.5. Sets
 
 **`immutable`**
 
@@ -245,7 +249,11 @@ s = { sets[0] for sets in portfolio }
 |                               |                                           |
 
 
-### 6. Dictionaries
+## 1.6. Dictionaries
+
+ref code = [dicts.py](./1_python_basics/dicts.py)
+
+`d = dict()`  #empty dict
 
 ```py
 s = {
@@ -289,6 +297,136 @@ total_shares = { s[0]: 0 for s in portfolio }
 
 for name, shares, _ in portfolio:
     total_shares[name] += shares
+
 # total_shares = {'IBM': 125, 'ACME': 50, 'PHP': 40}
 ```
+
+We can do the same thing without initializing the total_share with zeros and keys. We use the `counter() function`
+Basically counter generates a Counter() object with `Keys:number`  items.
+
+
+```py
+from collections import Counter()
+
+total_shares = Counter()
+
+for name, shares, _ in portfolio:
+    total_shares[name] += shares
+
+# total_share = Counter({'IBM': 125, 'ACME': 50, 'PHP': 40})
+```
+Common Functions
+
+```py
+pairs = [('IBM', 125), ('ACME', 50), ('PHP', 40)]
+d = dict()  # -> creats a dicts
+print(list(d))  # -> creats a list of 'keys'
+d.pairs() # -> creates a “keys view” object that is attached to the dict
+```
+
+## 1.7 Exceptions
+
+We use `try` `except` to handle errors
+```py
+try :
+  ...
+except ValueError as err:
+  ...  
+```
+also 
+```py
+raise RuntimeError('Computer says no')
+```
+
+```py
+raise SystemExit("EXIT") # Exit program with no error
+```
+
+## 1.8 Object and Classes
+
+All values used in a program are objects. An object consists of internal data and methods that perform various kinds of operations involving that data.
+
+The `class` statement is used to define new types of objects and for object-oriented programming.
+
+ref : [class_test.py](./1_python_basics/class_test.py)
+
+```py
+class Stack:
+    
+    def __init__(self) -> None:
+        self._items = []
+    
+    def push(self, item):
+        self._items.append(item)
+        
+    def pop(self):
+        self._items.pop()
+    
+    def __len__(self):
+        return len(self._items)
+    
+    def __repr__(self):
+        return f'<{type(self).__name__} at 0x{id(self):x}, size={len(self)}>'
+    
+    def print(self):
+        print(self._items)
+
+s = Stack()
+s.push('ONE')
+s.pop()
+for item in ['ONE', 'TWO']:
+    s.push(item) 
+s.push('THREE')
+s.print()
+
+print(f'len = {len(s)}')
+print(s)
+
+```
+
+`self` ->  The term “self” refers to the instance of the class that is currently being used. Its always the first argument. **Pointer to Current Object.**
+`__init__(self, ...)` -> Its the class constructor. Gets called when instance of class is created. It can be used to initialize the attributes.
+`_method` are meant to be private methods. Its a convention. Not to be used outside the Class.
+`__method__` are special method. eg :. `__len__` gets called when `len(obj)` is called. `__repr__` changes the way how the object is displayed and printed.
+
+#### Inheritance
+
+Now we can create a Class that inherits all attributes and methods of another class.
+
+```py
+class MyStack(Stack):
+    def print_len(self):
+        return "len : " + str(len(self._items))
+    
+s1 = MyStack()
+s1.push('ONE')  # -> calling push() from Stack class
+s1.push('TWO')  # -> calling push() from Stack class
+print(s1.print_len())  # -> calling from MyStack class
+s1.print()
+```
+
+We can also change the behaviour of an existing method in the inherited class. For ex: we can make the stack to accept only numbers.
+
+```py
+class MyStack(Stack):
+    def print_len(self):
+        return "len : " + str(len(self._items))
+    
+    ## CHANGING METHOD behaviour of Parent class
+    def push(self, item):
+        if not isinstance(item, (int, float)):
+            raise TypeError('Expected an integer value')
+        super().push(item)
+
+s1 = MyStack()
+# s1.push('ONE') -> ERROR
+s1.push(1)
+print(s1.print_len())
+s1.print()    
+
+#  len : 1
+# [1]
+```
+
+## 1.9 Modules
 
