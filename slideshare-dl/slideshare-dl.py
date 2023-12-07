@@ -10,7 +10,7 @@ print()
 
 URL = ""
 
-# Get the URL
+# Get the URLZ
 if len(sys.argv) < 2:
     URL = input('URL: ')
 else:
