@@ -15,6 +15,10 @@
   - [1.8 Object and Classes](#18-object-and-classes)
       - [Inheritance](#inheritance)
   - [1.9 Modules](#19-modules)
+  - [1.10 Script Writing, `␣␣name␣␣ == ␣␣main␣␣`](#110-script-writing-name--main)
+  - [1.11 Packages](#111-packages)
+  - [Python: It Fits Your Brain](#python-it-fits-your-brain)
+- [CHAPTER 2 : OPERATORS, EXPRESSIONS, and DATA MANUPULATIONS](#chapter-2--operators-expressions-and-data-manupulations)
 
 
 
@@ -429,4 +433,64 @@ s1.print()
 ```
 
 ## 1.9 Modules
+
+As your programs grow in size, you will want to break them into multiple files for easier maintenance. To do this, use the import statement. To create a module, put the relevant statements and definitions into a file with a .py suffix and the same name as the module. 
+
+check : [portfolio_package/portfolio_value_calculator.py](./1_python_basics/portfolio_package/portfolio_value_calculator.py)
+
+## 1.10 Script Writing, `␣␣name␣␣ == ␣␣main␣␣`
+
+`__name__ = name of program` : if imported as module
+`__name__ = __main__` : if ran as standalone program
+
+now we can use `if __name__ == __main__ :` to make the program run standalone in a proper way.
+
+check : [portfolio_package/readport.py](./1_python_basics/portfolio_package/readport.py)
+
+## 1.11 Packages
+
+```
+portfolio_package/
+    __init__.py     
+    readport.py
+    portfolio_value_calculator.py    (imports readport.py)
+```
+To run the portfolio_value_calculator.py, we have to go out of this package and run it : `python -m portfolio_package.portfolio_value_calculator` 
+
+
+## Python: It Fits Your Brain
+
+___________________________________________________________________________
+
+# CHAPTER 2 : OPERATORS, EXPRESSIONS, and DATA MANUPULATIONS
+
+| Number   | Base          |
+| -------- | ------------- |
+| 42       | Decimal       |
+| 0b101010 | Binary Number | 
+| 0o52     | Octal Number  |
+| 0x2a     | Hexadecimal   |
+
+>  Base is not stores as part of the integer. All of the above literals will display as 42. To print number with base use `bin(x), oct(x), hex(x)`.
+
+- `Floating Point number` - 4.2e+2 : Stored as **IEEE 754 double- precision (64-bit) values**.
+
+-  We can’t include the assignment operator as part of an expression:
+```py 
+while line=file.readline(): # Syntax Error. 
+    print(line)
+
+while (line:=file.readline()): # Using the wallrus operator
+    print(line)
+```
+-  Reference to lists (pointers in python). Both are refering to the same list at same memory location.
+```py
+a = [1, 2, 3]
+b = a
+a += [4, 5]
+
+print(a)    # -> [1, 2, 3, 4, 5]
+print(b)    # -> [1, 2, 3, 4, 5]
+```
+- **Object Comparison** : `x is y` checks if `id(x) == id(y)`.  Test two values to see whether they refer to literally the same object in memory. `x == y` checks if the containts of the objects are equal and not the object itself.
 
