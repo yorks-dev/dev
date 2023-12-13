@@ -19,6 +19,12 @@
   - [1.11 Packages](#111-packages)
   - [Python: It Fits Your Brain](#python-it-fits-your-brain)
 - [CHAPTER 2 : OPERATORS, EXPRESSIONS, and DATA MANUPULATIONS](#chapter-2--operators-expressions-and-data-manupulations)
+  - [1. Object Comparison :](#1-object-comparison-)
+  - [2. Ordered Comparison Operators :](#2-ordered-comparison-operators-)
+  - [3. ***Conditional Expressions*** :](#3-conditional-expressions-)
+  - [4. Operations on Iterables :](#4-operations-on-iterables-)
+  - [5. Operations on Sequences :](#5-operations-on-sequences-)
+  - [6. Operations on Mutable Sequences :](#6-operations-on-mutable-sequences-)
 
 
 
@@ -492,5 +498,108 @@ a += [4, 5]
 print(a)    # -> [1, 2, 3, 4, 5]
 print(b)    # -> [1, 2, 3, 4, 5]
 ```
-- **Object Comparison** : `x is y` checks if `id(x) == id(y)`.  Test two values to see whether they refer to literally the same object in memory. `x == y` checks if the containts of the objects are equal and not the object itself.
+<br>
+
+## 1. Object Comparison :
+
+`x is y` checks if `id(x) == id(y)`.  Test two values to see whether they refer to literally the same object in memory. `x == y` checks if the containts of the objects are equal and not the object itself.
+
+## 2. Ordered Comparison Operators : 
+
+We can use the comaprison operators on lists, tuples, and strings. It compares each index to the correspending index. As soon as the furst one greater or smaller is encountered, it decides the total outcome.
+   -  `[1, 2, 3]` < `[3, 4, 5]` also `[3, 4, 5, 6, 9, 9]` < `[1, 2, 4]`
+   For sets, x < y tests if x is strict subset of y (i.e., has fewer elements, but is not equal to y).
+   - For sets it checks strict subsets as sets values are unique.
+
+## 3. ***Conditional Expressions*** : 
+```py 
+minvalue = a if a <= b else b
+```
+
+## 4. Operations on Iterables :
+   
+| Description              | Operations                        |
+| ------------------------ | --------------------------------- |
+| `for vars in s:`         | Iteration                         |
+| `a, b, c ... in s:`      | Variable unpacking                |
+| `x in s`, `x not in s`   | Membership                        |
+| `[a, *s, b], {a, *s, b}`  | Expansion in list, tuples or sets |
+
+Example 1: Unpacking list and creating dict 
+
+```py
+items = [3, 4, 5]
+d={ }
+d['x'], d['y'], d['z'] = items
+
+# {'x' : 3, 'y' : 4, 'z' : 5}
+```
+> **NOTE : When unpacking values into locations, the number of locations on the left must exactly match the number of items in the iterable on the right.**
+```py
+datetime = ((5, 19, 2008), (10, 30, "am"))
+(month, day, year), (hour, minute, am_pm) = datetime
+(month, _, year), (hour, _, am_pm) = datetime    # _ is throwaway variable
+``` 
+
+Example 2 : If the number of items being unpacked isn’t known use `*extras`
+```py
+items = [1, 2, 3, 4]
+a, *extras, b = items    # a=1, *extras=[2, 3], b=4
+
+datetime = ((5, 19, 2008), (10, 30, "am"))
+(month, *_), (hour, *_) = daytime
+```
+Any iterable can be expanded when writing out list, tuple, and set literals usinf star (*) operator.
+
+```py
+items = [1, 2, 3, 4]
+a = (10, 11, *items, 12)  # (10, 11, 1, 2, 3, 4, 12)
+b = [a, *items, b] # [a, 1, 2, 3, 4, b] and not [a, [1, 2, 3, 4], b]
+```
+
+> NOTE : However, many iterable objects (such as files or generators) only support one-time iteration. If you use *-expansion, the contents will be consumed and the iterable won’t produce any more values on subsequent iterations.
+
+## 5. Operations on Sequences :
+
+```py
+a = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+
+a[2:5]     # [2, 3, 4]
+a[:3]      # [0, 1, 2]
+a[-3:]     # [7, 8, 9]
+a[::2]     # [0, 2, 4, 6, 8]
+a[::-2]    # [9, 7, 5, 3, 1] , if stride is -ve initial is from end if i is omited
+a[0:5:2]   # [0, 2, 4]
+a[5:0:-2]  # [5, 3 ,1]
+a[:5:1]    # [0, 1, 2, 3, 4]
+a[:5:-1]   # [9, 8, 7, 6]
+a[5::1]    # [5, 6, 7, 8, 9]
+a[5::-1]   # [5, 4, 3, 2, 1, 0]
+a[5:0:-1]  # [5, 4, 3, 2, 1]
+```
+Slices can be named using `slice()`. For example:
+```py
+firstfive = slice(0, 5)
+s = 'hello world'
+print(s[firstfive])     # Prints 'hello'
+```
+
+## 6. Operations on Mutable Sequences :
+
+All the same as above and insertion and deletion also allowed.
+
+```py
+a = [1, 2, 3, 4, 5]
+a[3:4] = [-1, -2, -3]    # a = [1, 6, 10, -1, -2, -3, 5]
+a[2:] = [0]     # a = [1, 6, 0]
+
+a = [1, 2, 3, 4, 5]
+a[1::2] = [10, 11]      # a = [1, 10, 3, 11, 5]
+# Have to suply exact number of items in the right that matches the output on the left cause the stride
+del a[1:]  # [1]
+```
+
+> NOTE : The popular numpy package has different slicing semantics than Python lists. Same goes with third party packages.
+
+
 
