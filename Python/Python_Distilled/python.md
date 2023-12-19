@@ -21,10 +21,13 @@
 - [CHAPTER 2 : OPERATORS, EXPRESSIONS, and DATA MANUPULATIONS](#chapter-2--operators-expressions-and-data-manupulations)
   - [1. Object Comparison :](#1-object-comparison-)
   - [2. Ordered Comparison Operators :](#2-ordered-comparison-operators-)
-  - [3. ***Conditional Expressions*** :](#3-conditional-expressions-)
+  - [3. Conditional Expressions :](#3-conditional-expressions-)
   - [4. Operations on Iterables :](#4-operations-on-iterables-)
   - [5. Operations on Sequences :](#5-operations-on-sequences-)
   - [6. Operations on Mutable Sequences :](#6-operations-on-mutable-sequences-)
+  - [7. Operations on Sets](#7-operations-on-sets)
+  - [8. Operations on Mappings](#8-operations-on-mappings)
+  - [9. List, Set \& Dict Comprehensions](#9-list-set--dict-comprehensions)
 
 
 
@@ -473,7 +476,7 @@ ___________________________________________________________________________
 | Number   | Base          |
 | -------- | ------------- |
 | 42       | Decimal       |
-| 0b101010 | Binary Number | 
+| 0b101010 | Binary Number |
 | 0o52     | Octal Number  |
 | 0x2a     | Hexadecimal   |
 
@@ -511,7 +514,7 @@ We can use the comaprison operators on lists, tuples, and strings. It compares e
    For sets, x < y tests if x is strict subset of y (i.e., has fewer elements, but is not equal to y).
    - For sets it checks strict subsets as sets values are unique.
 
-## 3. ***Conditional Expressions*** : 
+## 3. Conditional Expressions : 
 ```py 
 minvalue = a if a <= b else b
 ```
@@ -523,7 +526,7 @@ minvalue = a if a <= b else b
 | `for vars in s:`         | Iteration                         |
 | `a, b, c ... in s:`      | Variable unpacking                |
 | `x in s`, `x not in s`   | Membership                        |
-| `[a, *s, b], {a, *s, b}`  | Expansion in list, tuples or sets |
+| `[a, *s, b], {a, *s, b}` | Expansion in list, tuples or sets |
 
 Example 1: Unpacking list and creating dict 
 
@@ -601,5 +604,52 @@ del a[1:]  # [1]
 
 > NOTE : The popular numpy package has different slicing semantics than Python lists. Same goes with third party packages.
 
+## 7. Operations on Sets
 
+| Operations | Explaination        |
+| ---------- | ------------------- |
+| a = t \| s | Union               |
+| b = t & s  | Intersection        |
+| c = t - s  | Difference          |
+| d = t ^ s  | Symetric Difference |
+
+**Symetric Difference** - items that are in either s or t but not in both.
+
+> Also works on keys of dicts.
+eg : `a.keys() & b.keys()`
+
+## 8. Operations on Mappings
+
+| Operation      | Description               |
+| -------------- | ------------------------- |
+| `a = m['key']` | Inexing                   |
+| `del m['key']` | Deleting by key           |
+| 'key' in m     | Membership                |
+| `m.keys()`     | Returns the Keys          |
+| `m.values()`   | Returns the Values        |
+| `m.items()`    | returns (key, value) pair |
+
+example : tuple as key (immutble)
+```py
+m[('ayush', 'dutta', '11-07-2002')] = 'Computer Science'
+m[('lugen marie','dutta', '11-28-2003')] = 'English'
+```
+
+## 9. List, Set & Dict Comprehensions
+
+Find all entries that have more than 100 shares
+
+```py
+# Some data (a list of dictionaries)
+portfolio = [
+  {'name': 'IBM', 'shares': 100, 'price': 91.1 },
+  {'name': 'MSFT', 'shares': 50, 'price': 45.67 },
+  {'name': 'HPE', 'shares': 75, 'price': 34.51 },
+  {'name': 'CAT', 'shares': 60, 'price': 67.89 },
+  {'name': 'IBM', 'shares': 200, 'price': 95.25 }
+]
+
+more100 = [s["name"] for s in portfolio if s["shares"] > 100]
+
+```
 
