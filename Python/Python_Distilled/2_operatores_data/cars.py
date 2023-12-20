@@ -1,30 +1,32 @@
 class Car:
 
-    def __init__(self, color, mileage, model, type):
-        self.model = model
+    def __init__(self, color, milage, model, topSpeed, unit, vehicle_type):
         self.color = color
-        self.mileage = mileage
-        self.speed = 0
-        self.type = type
+        self.mileage = milage
+        self.model = model
+        self.vehicle_type = vehicle_type
+        self.topSpeed = (topSpeed, unit)
+        self.accidentStatus = False
 
     def change(self, color, mileage):
         self.color = color
         self.mileage = mileage
 
-    def printCar(self):
-        print(f"Color: {self.color}")
-        print(f"Mileage: {self.mileage}")
-        print(f"Speed: {self.speed}")
+    def printCarInfo(self):
+        print(f"Color: {self.color}, Mileage: {self.mileage}, Model: {
+              self.model}, Speed: {self.topSpeed}, Vehicle_type: {self.vehicle_type}")
+        print(f"Accident status: {self.accidentStatus}")
 
-    def setSpeed(self, speed):
-        self.speed = speed
+    def changeAccidentStatus(self):
+        self.accidentStatus = True
 
 
 class ElectricCar(Car):
 
-    def __init__(self, color, milage, model, battery):
-        super().__init__(color, milage, model, "electric")
+    def __init__(self, color, milage, model, topSpeed, unit, battery, range):
+        super().__init__(color, milage, model, topSpeed, unit, "electric")
         self.battery = battery
+        self.range = range
         self.autopilotStatus = False
         # default credit score at the start. [500, 800]
         self.autopilotCreditScore = 700
@@ -40,8 +42,27 @@ class ElectricCar(Car):
             print("Autopilot credit score is low.")
             self.__revokeAutopilot()
 
+    def printAutopilotStatus(self):
+        print(self.autopilotStatus)
+
     def carPrint(self):
-        super().printCar()
+        super().printCarInfo()
         print(f'battery : {self.battery}')
+        print(f'range : {self.range}')
         print(f'autopilot : {self.autopilotStatus}')
         print(f'autopilot credit score : {self.autopilotCreditScore}')
+
+
+class GasolineCar(Car):
+    def __init__(self, color, milage, model, engineCC, topSpeed, unit, fuelTankSize, fuelConsumption):
+        super().__init__(color, milage, model, topSpeed,
+                         unit, "gasoline")
+        self.fuelTankSize = (fuelTankSize, "L")
+        self.fuelConsumption = (fuelConsumption, "KMPL")
+        self.engineCC = engineCC
+
+    def carPrint(self):
+        super().printCarInfo()
+        print(f'fuelTankSize : {self.fuelTankSize}')
+        print(f'fuelConsumption : {self.fuelConsumption}')
+        print(f'engineCC : {self.engineCC}')
