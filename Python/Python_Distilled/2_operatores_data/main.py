@@ -4,16 +4,16 @@ car1 = cars.ElectricCar(
     color="red",
     milage=10000,
     model="Tesla",
-    topSpeed=140,
+    top_speed=140,
     unit="MPH",
     battery=3000,
-    range=400,
+    battery_range=400,
 )
-car1.carPrint()
-car1.autopilotActivate()
-car1.carPrint()
-car1.changeAccidentStatus()
-car1.carPrint()
+car1.car_print()
+car1.autopilot_activate()
+car1.car_print()
+car1.change_accident_status()
+car1.car_print()
 
 print("--------------------------------")
 
@@ -21,16 +21,16 @@ car2 = cars.GasolineCar(
     color="blue",
     milage=18000,
     model="Honda",
-    engineCC="2.5L",
-    topSpeed=110,
+    engine_cc="2.5L",
+    top_speed=110,
     unit="MPH",
-    fuelTankSize="40",
-    fuelConsumption="14",
+    fuel_tank_size="40",
+    fuel_consumption="14",
 )
 
-car2.carPrint()
-car2.changeAccidentStatus()
-car2.carPrint()
+car2.car_print()
+car2.change_accident_status()
+car2.car_print()
 
 print("--------------------------------")
 
@@ -38,35 +38,35 @@ car3 = cars.ElectricCar(
     color="green",
     milage=120000,
     model="Ford F150 Lightning",
-    topSpeed=120,
+    top_speed=120,
     unit="MPH",
     battery=3500,
-    range=350,
+    battery_range=350,
 )
 
-car3.carPrint()
+car3.car_print()
 
 car4 = cars.ElectricCar(
     color="black",
     milage=10000,
     model="Revean",
-    topSpeed=140,
+    top_speed=140,
     unit="MPH",
     battery=3000,
-    range=400,
+    battery_range=400,
 )
 
-car4.carPrint()
+car4.car_print()
 
 car5 = cars.GasolineCar(
     color="white",
     milage=1200,
     model="Kia",
-    engineCC="2.5L",
-    topSpeed=110,
+    engine_cc="2.5L",
+    top_speed=110,
     unit="MPH",
-    fuelTankSize="60",
-    fuelConsumption="16",
+    fuel_tank_size="60",
+    fuel_consumption="16",
 )
 
-car5.carPrint()
+car5.car_print()

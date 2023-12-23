@@ -244,17 +244,17 @@ s = { sets[0] for sets in portfolio }
 {'FB', 'ALPH', 'GOOG', 'GOG'}
 ```
 
-| Operations | Explaination        |
-| ---------- | ------------------- |
-| a = t \| s | Union               |
-| b = t & s  | Intersection        |
-| c = t - s  | Difference          |
-| d = t ^ s  | Symetric Difference |
+| Operations | Explanation          |
+|------------|----------------------|
+| a = t \| s | Union                |
+| b = t & s  | Intersection         |
+| c = t - s  | Difference           |
+| d = t ^ s  | Symmetric Difference |
 
-**Symetric Difference** - items that are in either s or t but not in both.
+**Symmetric Difference** - items that are in either s or t but not in both.
 
-| Operation                     | Explaination                              |
-| ----------------------------- | ----------------------------------------- |
+| Operation                     | Explanation                               |
+|-------------------------------|-------------------------------------------|
 | a.add('Hello')                | Single item add                           |
 | a.update('hello', 'hi', 'yo') | Add multiple items                        |
 | t.remove('IBM')               | Remove 'IBM' or raise KeyError if absent. |
