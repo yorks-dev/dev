@@ -28,6 +28,11 @@
   - [7. Operations on Sets](#7-operations-on-sets)
   - [8. Operations on Mappings](#8-operations-on-mappings)
   - [9. List, Set \& Dict Comprehensions](#9-list-set--dict-comprehensions)
+  - [10. Generator Expressions](#10-generator-expressions)
+- [CHAPTER 3: Program Structure and Control Flow](#chapter-3-program-structure-and-control-flow)
+  - [3.1 Loops \& Iterations](#31-loops--iterations)
+  - [3.2 Exceptions](#32-exceptions)
+    - [3.2.1 Exception Hierarcy](#321-exception-hierarcy)
 
 
 
@@ -245,7 +250,7 @@ s = { sets[0] for sets in portfolio }
 ```
 
 | Operations | Explanation          |
-|------------|----------------------|
+| ---------- | -------------------- |
 | a = t \| s | Union                |
 | b = t & s  | Intersection         |
 | c = t - s  | Difference           |
@@ -254,7 +259,7 @@ s = { sets[0] for sets in portfolio }
 **Symmetric Difference** - items that are in either s or t but not in both.
 
 | Operation                     | Explanation                               |
-|-------------------------------|-------------------------------------------|
+| ----------------------------- | ----------------------------------------- |
 | a.add('Hello')                | Single item add                           |
 | a.update('hello', 'hi', 'yo') | Add multiple items                        |
 | t.remove('IBM')               | Remove 'IBM' or raise KeyError if absent. |
@@ -651,5 +656,133 @@ portfolio = [
 
 more100 = [s["name"] for s in portfolio if s["shares"] > 100]
 
+# Use of walrus operator, and creating a set of tuples
+more100_set = {(s["name"], v) for s in portfolio if (v := s["shares"]) >= 100}
+print(more100_set)
+
 ```
 
+> NOTE : typechecking while comprehension does not exist. So use seperate function. eg :  [comprehension.py](./2_operatores_data/comprehension.py)
+
+## 10. Generator Expressions
+A generator expression is an object that carries out the same computation as a list comprehension but produces the result iteratively. It gives you a generator object that we can iterate on demand.
+
+```py
+nums = [1, 4, 9, 16]
+squares = (i*i for i in values)
+
+>>> squares
+<generator object at 0x590a8>
+>>> next(squares)
+1
+>>> next(squares)
+4
+...
+>>> for n in squares:
+...     print(n)
+9
+16
+>>>
+```
+
+>**NOTE : A generator expression can only be used once. If you try to iterate a second time, you’ll get nothing.**
+
+Look at [generators.py](./2_operatores_data/generators.py) for implementation using FILE IO.
+
+------------------------------------------------------------------------------
+
+# CHAPTER 3: Program Structure and Control Flow
+
+## 3.1 Loops & Iterations
+
+1. `enumerate` - 
+```py
+values = [1, 2, 3, 4, 5]
+
+for index, i in enumerate(values, start=100):
+    print((index, i))
+
+# (100, 1)
+# (101, 2)
+# (102, 3)
+# (103, 4)
+# (104, 5)
+```
+
+2. `zip` -
+```py
+x = [1, 2, 3, 4, 5]
+y = ["a", "b", "c", "d", "e"]
+
+for i in (zip_x_y := zip(x, y)):
+    print(i)
+
+# (1, 'a')
+# (2, 'b')
+# (3, 'c')
+# (4, 'd')
+# (5, 'e')
+```
+3. `for else ` loop structure
+
+The else runs only if the loop is complleted on its own without breaking at any moment.
+
+```py
+values = [1, 2, 3, 4, 6, 7, 8, 9, 6, 12, 18, 19]
+
+for i in values:
+    if i % 5 == 0:
+        print("Number div by 5 found")
+        break
+
+else:
+    print("No number div by 5")
+
+```
+
+> **NOTE : to break out of a deeply nested loop raise an exception**
+
+## 3.2 Exceptions
+
+check : [exceptions.py](./3_prog_sstructure_control_flow/exceptions.py)
+
+As a matter of programming style, you should only catch exceptions from which your code can actually recover.
+
+Exceptions can be use with `as` var. And one can use the `a.args` which  is a tuple
+```py
+try:
+    file = open("foo.txt", "r", encoding="UTF-8")
+
+except FileNotFoundError as e:
+    print(e.args)
+
+# (2, 'No such file or directory')
+```
+
+It also supports `try else` statements. The Else executes if there is no exception raised in try block.
+
+```py
+try:
+    file = open("./file.txt", "r", encoding="UTF-8")
+
+except FileNotFoundError as e:
+    print(f"Unable to open file : {e}")
+    DATA = ""
+
+else:
+    DATA = file.read()
+    print(DATA)
+```
+
+### 3.2.1 Exception Hierarcy
+
+For `IndexError` or `KeyError` we can use `LookupError` ro handle both. Both of them inherit from `LookupError`.
+
+**Exception Catagories :**
+
+| Operations | Explaination        |
+| ---------- | ------------------- |
+| a = t \| s | Union               |
+| b = t & s  | Intersection        |
+| c = t - s  | Difference          |
+| d = t ^ s  | Symetric Difference |
