@@ -33,6 +33,11 @@
   - [3.1 Loops \& Iterations](#31-loops--iterations)
   - [3.2 Exceptions](#32-exceptions)
     - [3.2.1 Exception Hierarcy](#321-exception-hierarcy)
+    - [3.2.2 Exceptions and Control Flow](#322-exceptions-and-control-flow)
+    - [3.2.3 User defined exceptions](#323-user-defined-exceptions)
+    - [3.2.4 Chained Exception](#324-chained-exception)
+      - [3.2.4.1 Expected Chained Exception](#3241-expected-chained-exception)
+      - [3.2.4.2 UnExpected Chained Exception](#3242-unexpected-chained-exception)
 
 
 
@@ -744,7 +749,7 @@ else:
 
 ## 3.2 Exceptions
 
-check : [exceptions.py](./3_prog_sstructure_control_flow/exceptions.py)
+check : [exceptions.py](./3_prog_sstructure_control_flow/exception.py)
 
 As a matter of programming style, you should only catch exceptions from which your code can actually recover.
 
@@ -780,9 +785,182 @@ For `IndexError` or `KeyError` we can use `LookupError` ro handle both. Both of 
 
 **Exception Catagories :**
 
-| Operations | Explaination        |
-| ---------- | ------------------- |
-| a = t \| s | Union               |
-| b = t & s  | Intersection        |
-| c = t - s  | Difference          |
-| d = t ^ s  | Symetric Difference |
+ | Exception Class   | Description                                             |
+ | ----------------- | ------------------------------------------------------- |
+ | `BaseException`   | The root class for all exceptions                       |
+ | `Exception`       | Base class for all program-related errors               |
+ | `ArithmeticError` | Base class for all math-related errors                  |
+ | `ImportError`     | Base class for import-related errors                    |
+ | `LookupError`     | Base class for all container lookup errors              |
+ | `OSError`         | Base class for all system-related errors                |
+ | `ValueError`      | Base class for value-related errors, including Unicode  |
+ | `UnicodeError`    | Base class for a Unicode string encoding-related errors |
+
+**Other exceptions which aren’t part of a larger exception group :**
+
+| Exception Class       | Description                                          |
+| --------------------- | ---------------------------------------------------- |
+| `AssertionError`      | Failed assert statement                              |
+| `AttributeError`      | Bad attribute lookup on an object                    |
+| `EOFError`            | End of File                                          |
+| `MemoryError`         | Recoverable out-of-memory error                      |
+| `NameError`           | Name not found in the local or global namespace      |
+| `NotImplementedError` | Unimplemented feature                                |
+| `RuntimeError`        | A generic “something bad happened” error             |
+| `TypeError`           | Operation applied to an object of the wrong type     |
+| `UnboundLocalError`   | Usage of a local variable before a value is assigned |
+
+### 3.2.2 Exceptions and Control Flow
+
+Few exceptions can alter the control flow.
+
+**`SystemExit`** - Raised to indicate program exit. The message is printed to `sys.stderr`, and terminated with exit code 1.
+ 
+ ```py
+ import sys
+
+ if len(sys.argv) != 2:
+    raise SystemExit(f'Usage: {sys.argv[0]} filename')
+
+filename = sys.argv[1]
+ ```
+
+### 3.2.3 User defined exceptions
+
+see : [custom_exceptions.py](./3_prog_sstructure_control_flow/custom_exception.py)
+
+```py
+class DeviceError(Exception):
+    def __init__(self, errno, msg) -> None:
+        self.args = (errno, msg)
+        self.errno = errno
+        self.msg = msg
+
+    # or if you dont want seperate variables for the args
+
+    # def __init__(self, *args: object) -> None:
+    #     super().__init__(*args)
+
+
+try:
+    raise DeviceError(1, "Not Responding")
+except DeviceError as e:
+    print(e.args)
+    print(e.errno)
+    print(e.msg)
+
+# (1, 'Not Responding', 1)
+# 1
+# Not Responding
+```
+
+**Note :** When you create a custom exception class that redefines `__init__()`, it is important to assign a tuple containing the arguments of` __init__()` to the attribute `self.args` as shown. 
+
+**Exception organised into hierarchy using inheritance:**
+
+```py
+class HostnameError(NetworkError): 
+    pass
+class TimeoutError(NetworkError):
+    pass
+
+def error1():
+    raise HostnameError('Unknown host')
+def error2():
+    raise TimeoutError('Timed out')
+
+try: 
+    error1()
+except NetworkError as e:
+    if type(e) is HostnameError:
+        # Perform special actions for this kind of error
+        ...
+```
+### 3.2.4 Chained Exception
+
+#### 3.2.4.1 Expected Chained Exception
+**`see`** : [chained_exceptions.py](./3_prog_sstructure_control_flow/chained_exception.py)
+
+```py
+class ApplicationError(Exception):
+    def __init__(self, msg):
+        self.msg = msg
+
+
+def do_something(): # This will produce ValueError exception
+    x = int("N/A")
+    print(x)
+
+
+def spam():
+    try:
+        do_something()
+    except Exception as e:
+        # from e means chain exception raised intentionally and knowingly from inside e (Exception)
+        raise ApplicationError("do_something() Failed") from e
+
+
+# spam() ->  #If an uncaught ApplicationError occurs, you will get a message
+# that includes both exceptions.
+
+# Lets catch it now.
+# start reading here.
+try:
+    spam()
+except ApplicationError as f:
+    print(f"{f.msg}. Reason:", f.__cause__)
+
+# __cause__ attribute contains the previous exception
+# here for example - <class 'ValueError'> exception
+```
+
+**NOTE : `__cause__` will only hold previous exception if the chain exception (here ApplicationError) was expected.**
+
+#### 3.2.4.2 UnExpected Chained Exception
+
+**`see`** : [chained_exception_exp_unexp_advanced.py](./3_prog_sstructure_control_flow/chained_exception_exp_unexp_advanced.py)
+
+```py
+class ApplicationError(Exception):
+    def __init__(self, msg):
+        self.msg = msg
+
+
+class FirstException(Exception):
+    def __init__(self, msg, errno):
+        self.msg = msg
+        self.errno = errno
+        self.args = (msg, errno)
+
+
+def do_something():
+    raise FirstException("First Exception", "ERROR1")
+    # raise FirstException("First Exception", "1")
+
+
+def spam():
+    try:
+        do_something()
+    except FirstException as e:
+        err_num = int(e.errno)  # This gives error if errno is ERROR1 and not 1
+        # This error is unexpected. It will no longer raise ApplicationError. But if it's 1 then no error, and it will raise ApplicationError which is expected. 
+        print(err_num)
+        raise ApplicationError("It Failed") from e
+
+# START READING HERE
+try:
+    spam()
+except Exception as f:
+    # depending on errno ERROR1 or 1, it will get an ApplicationError or ValueError.
+    print(type(f))
+    # This will return None if no unexpected error was raised during FirstExeption,
+    # else if the expected ApplicationError was raised the it will hold previous exception,
+    # i.e FirstException
+    print("Reason:", f.__cause__)
+    # This will return the previous exception in case of both expected and unexpected exception
+    print("Reason:", f.__context__)
+
+# __cause__ attribute contains the previous exception
+# here for example - <class 'ValueError'> exception
+
+```
