@@ -1,3 +1,5 @@
+import sys
+
 try:
     file = open("./file.txt", "r", encoding="UTF-8")
 
@@ -24,3 +26,12 @@ try:
 
 except LookupError as e:
     print(e)
+
+
+# Trying the SystemExit using afgv
+
+if len(sys.argv) != 2:
+    raise SystemExit("ERROR : Please enter filename in args")
+
+filename = sys.argv[1]
+print(f"Filename : {filename}")
