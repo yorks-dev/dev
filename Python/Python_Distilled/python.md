@@ -38,6 +38,9 @@
     - [3.2.4 Chained Exception](#324-chained-exception)
       - [3.2.4.1 Expected Chained Exception](#3241-expected-chained-exception)
       - [3.2.4.2 UnExpected Chained Exception](#3242-unexpected-chained-exception)
+    - [3.2.5 Exception Traceback](#325-exception-traceback)
+    - [3.2.6 Exception Handling Advice](#326-exception-handling-advice)
+  - [3.3 Context Managers \& "with" statement](#33-context-managers--with-statement)
 
 
 
@@ -747,6 +750,8 @@ else:
 
 > **NOTE : to break out of a deeply nested loop raise an exception**
 
+---
+
 ## 3.2 Exceptions
 
 check : [exceptions.py](./3_prog_sstructure_control_flow/exception.py)
@@ -964,3 +969,134 @@ except Exception as f:
 # here for example - <class 'ValueError'> exception
 
 ```
+
+### 3.2.5 Exception Traceback
+
+Exceptions have an associated stack traceback that provides information about where an error occurred. The traceback is stored in the __traceback__ attribute of an exception. It will print the Original traceback message.
+
+```py
+# TRACEBACK ERROR
+    tbline = traceback.format_exception(type(f), f, f.__traceback__)
+    TBMSG = "".join(tbline)
+    print(TBMSG)
+```
+
+### 3.2.6 Exception Handling Advice
+
+1. The first rule is to not catch exceptions that can’t be handled at that specific location in the code. 
+eg : in `read_data()` function if the filename has error and file can not be opened. . It’s better to let the operation fail and report an exception back to the caller. Avoiding an error check in read_data() doesn’t mean that the exception would never be handled anywhere—it just means that it’s not the role of read_data() to do it. Perhaps the code that prompted a user for a filename would handle this exception.
+
+2. On the other hand, a function might be able to recover from bad data. Then use exception to deal with the bad data.
+
+3. When catching errors, try to make your except clauses as narrow as reasonable. 
+4. Finally, if you’re explicitly raising an exception, consider making your own exception types. 
+
+---
+
+## 3.3 Context Managers & "with" statement
+
+`read` : [context_manager.py](./3_prog_sstructure_control_flow/context_manager.py)
+
+in the `read` we did context manager with unexpected exception handling with __context__ attribute. 
+
+> **GIST** : A raised exception can cause control flow to bypass statements responsible for releasing critical resources, such as a lock or close a file.
+The `with` statement allows a series of statements to execute inside a runtime context that is controlled by an object serving as a context manager.
+
+**Simple Context Manager :** 
+
+```py
+with open('debuglog', 'wt') as file:  
+    file.write('Debugging\n') 
+    ... 
+    file.write('Done\n')
+
+# automatically closes file when context exists 
+```
+1. When the with obj statement executes, it calls the method `obj.__enter__()` to signal that a new context is being entered. The `__enter__()` returns and its stores `as var`. It can return `self` like in most cases because this allows an object to be constructed and used as a context manager in the same step (like opening file) or a list in case of `ListTransaction` in [context_manager.py](./3_prog_sstructure_control_flow/context_manager.py)
+
+2. When control flow leaves the context, the method `obj.__exit__(type, value, traceback)` executes. **No error : args is `None`**. **If error args from the exception.**
+If the` __exit__()` method returns True, it indicates that the raised exception was handled and should no longer be propagated. (handled in the `__exit__()`) Returning None or False will cause the exception to propagate. (handle the exception in the try/catch)
+
+```py
+# ListTransaction where a list is given and modified. But modification only happens if there is
+# no error encountered during each step of the modification.
+# Also there will be a memory error if length exceeds MAX_LEN_LIST but recoverable and list will be
+# modified without the exceeding objects
+
+
+class MyException(Exception):
+    def __init__(self, msg) -> None:
+        self.msg = msg
+        self.errno = "LST_ERR"
+        self.args = (self.msg, self.errno)
+
+    def __str__(self) -> str:
+        return self.msg + "/" + self.errno
+
+
+class OutOfMemoryError(Exception):
+    def __init__(self, msg) -> None:
+        self.msg = msg
+        self.errno = "OFM>6"
+        self.args = (self.msg, self.errno)
+
+    def __str__(self) -> str:
+        return self.msg + "/" + self.errno
+
+
+class ListTransaction:
+    def __init__(self, thelist):
+        self.thelist = thelist
+        self.__workingcopy = []  # we will work on this and not the original list
+
+    def __enter__(self):
+        self.__workingcopy = list(self.thelist)
+        return (
+            self.__workingcopy
+        )  # we return the working copy as a new list to be held in the as var
+
+    def __exit__(self, type, value, tb):
+        if type is None:  # No error occured during context)
+            self.thelist[:] = self.__workingcopy
+            return True
+
+        if type is OutOfMemoryError:
+            print(value)
+            # choice = input("Do you want to modify List")
+            # exclude the last element that was out of memory
+            self.thelist[:] = self.__workingcopy[:-1]
+
+            # We dont need to catch the OutOfMemoryError because we already printed the Error mesage
+            # when the OutOfMemoryError cause the __exit__() to be called by using
+            # the print(value) statement. thus we return true
+            return True
+
+        # if not OutOfMemory and Exception occured.
+        # it will get invoked if `it.append(int("*"))` is uncommented
+        raise MyException("Error during List Modification")
+
+
+# ------------------------
+# || START READING HERE ||
+# ------------------------
+items = [1, 2, 3]
+MAX_LEN_LIST = 6
+
+print(f"initial list : {items}")
+
+try:
+    with ListTransaction(items) as it:
+        # we will keep acepting integers until user enters n or N.
+        while (append_char := input("append() : ")) != "n" and (append_char != "N"):
+            it.append(int(append_char))
+
+            if len(it) > int(MAX_LEN_LIST):
+                raise OutOfMemoryError("Out of memory")
+
+except MyException as f:
+    print(f, "because of : ", f.__context__)
+
+
+print(f"updated list : {items}")
+```
+

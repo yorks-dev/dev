@@ -11,8 +11,8 @@ class FirstException(Exception):
 
 
 def do_something():
-    raise FirstException("First Exception", "ERROR1")
-    # raise FirstException("First Exception", "1")
+    # raise FirstException("First Exception", "ERROR1")
+    raise FirstException("First Exception", "1")
 
 
 def spam():
