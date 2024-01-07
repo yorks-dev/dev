@@ -41,6 +41,22 @@
     - [3.2.5 Exception Traceback](#325-exception-traceback)
     - [3.2.6 Exception Handling Advice](#326-exception-handling-advice)
   - [3.3 Context Managers \& "with" statement](#33-context-managers--with-statement)
+- [CHAPTER 4 : Objects, Types and Protocols](#chapter-4--objects-types-and-protocols)
+  - [4.1 Essential Concepts](#41-essential-concepts)
+  - [4.2 Reference Counting and Garbage Collection](#42-reference-counting-and-garbage-collection)
+  - [4.3 References and Copies](#43-references-and-copies)
+  - [4.4 Object Representation and Printing](#44-object-representation-and-printing)
+  - [4.5 First-Class Objects](#45-first-class-objects)
+  - [4.6 Object Protocols and Data Abstraction](#46-object-protocols-and-data-abstraction)
+    - [4.6.1 Object Protocol](#461-object-protocol)
+    - [4.6.2  Number Protocol](#462--number-protocol)
+    - [4.6.3 Comparison Protocol](#463-comparison-protocol)
+    - [4.6.4 Conversion Protocol](#464-conversion-protocol)
+    - [4.6.5 Container Protocol](#465-container-protocol)
+    - [4.6.6 Iteration Protocol](#466-iteration-protocol)
+    - [4.6.7 Attribute Protocol](#467-attribute-protocol)
+    - [4.6.8 Function Protocol](#468-function-protocol)
+    - [4.6.9 Context Manager Protocol](#469-context-manager-protocol)
 
 
 
@@ -287,19 +303,38 @@ s = {
     'shares' : 100,
     'price' : 490.10,
     'S&P500' : False
-  }
+}
 
-  print(s['names])
-    if s.get('S&P500') is False:
-       s['S&P500'] = True
+print(s['names])
+if s.get('S&P500') is False:
+    s['S&P500'] = True
 
-  print(s)
+print(s)
+
+if s.get('KEY_NOT_PRESENT') is None:
+    print("Key Not found)
+
+#or
+
+print(s.get('KEY_NOT_PRESENT', "Key not found"))
+# it will print "key not found" if no keys found or else it will print the value
+
+
 ```
+
 
 ```bash
 'GOOG'
 {'name' : 'GOOG', 'shares' : 100, 'price' : 490.10 'S&P200' : true}
 ```
+**Iterating over a dict:**
+```py
+dict_a = {'name':'Ayush', 'age':21}
+for key, value in dict_a.items():
+    print(key, value)
+```
+
+
 Using tuples with dicts
 
 ```py
@@ -1099,4 +1134,436 @@ except MyException as f:
 
 print(f"updated list : {items}")
 ```
+
+--------------------------------------------------------------------------
+# CHAPTER 4 : Objects, Types and Protocols
+
+## 4.1 Essential Concepts
+
+1. **Every piece of data stored in a program is an object**. 
+2. **Every object has :**
+   - **Identity** : Memory Location. (pointer)
+   - **Type** : Object's Class (like Integer object)
+   - **Value** : The contents at the memory location (*pointer)
+  
+- The type of an object, also known as the object’s class, defines the object’s internal data representation as well as supported methods. When an object of a particular type is created, that object is called an instance of that type. *Attributes of an object are accessed using the dot operator.*
+
+- **Container** : An object that holds references to other objects.
+    eg : `writing a + 10 executes a method a.__add__(10).`
+
+3. `id()` returns an integer corresponding to memory location of the object. `is` operator compares memory location. `==` operator conpares values. 
+   
+4. `type()` returns type of object. 
+   - The type of an object is itself an object, known as object’s class.
+```py
+items = list()
+if isinstance(items, list): 
+    items.append(item)
+def removeall(items: list, item) -> list: 
+    return [i for i in items if i != item]
+```
+4. `subtypes`: A subtype is a type defined by inheritance. It carries all of the features of the original type plus additional and/or redefined methods.
+```py
+class MyList(list):
+    def removeall(self, item) -> list:
+        return [i for i in self if i != item]
+
+
+my_list = MyList([1, 2, 3, 4, 5, 6, 7, 8, 2, 5, 2])
+new_list = my_list.removeall(2)
+
+# new_list = [1, 3, 4, 5, 6, 7, 8, 5]
+```
+## 4.2 Reference Counting and Garbage Collection
+
+Python manages objects through automatic garbage collection. **All objects are reference-counted.** An object’s reference count is increased whenever it’s assigned to a new name or placed in a container such as a list, tuple, or dictionary.
+
+```py
+a = 37       # Creates an object with value 37
+b = a        # Increases reference count on 37
+c = []
+c.append(b)  # Increases reference count on 37
+```
+Only one object - Integer object 37 is created, all rest creates references to this.
+```py
+del a # Decrease reference count of 37 
+b = 42 # Decrease reference count of 37 
+c[0] = 2.0 # Decrease reference count of 37
+```
+`sys.getrefcount(obj)` - gives the reference count of the object.
+
+**When an object’s reference count reaches zero, it is garbage-collected**. 
+
+**Circular Dependencies** : 
+However, in some cases a ***circular dependency*** may exist in a collection of objects that are no longer in use.
+```py
+a={ } 
+b={ }
+a['b'] = b   # a contains reference to b
+b['a'] = a   # b contains reference to a
+del a
+del b
+```
+In this example, the `del` statements decrease the reference count of a and b and destroy the names used to refer to the underlying objects. However, since each object contains a reference to the other, the reference count doesn’t drop to zero and the objects remain allocated.
+
+The `cycle-detection algorithm` runs periodically as the interpreter allocates more and more memory during execution. It finds and deletes these inaccessable memories. The `gc.collect()` function can be used to immediately invoke the cyclic garbage collector.
+
+***use case :*** During handling of large data sets
+```py
+def some_calculation():
+    data = create_giant_data_structure()
+    # Use data for some part of a calculation ...
+    # Release the data
+    del data
+
+    # Calculation continues
+    ...
+```
+
+## 4.3 References and Copies
+When a program makes an assignment such as b = a, a new reference to a is created. This is not creating a copy, just assigning pointers.
+
+`b is a` : True
+
+**Shallow Copy :**
+Creates a new object, but populates it with references to the items contained in the original object.
+```py
+a = [1, 2, [3, 4]]
+b = list(a)
+
+a[0] = -1   # wont change b[0]. new obj -1 is placed in a[0] instead of changing object 1 itself at a[0]
+b.append(9) # wont change a because a new object 9 is assigned to b at the end
+
+#thes will change both a and b because the object(list) [3, 4] which is shared between a and b is changed
+a[2][0] = -5  
+b[2][0] = -8
+
+
+print(a, b)
+
+# [-1, 2, [-5, -8]] [1, 2, [-5, -8], 9]
+```
+<br>
+
+**Deep Copy :**
+
+`copy.deepcopy()` creates a completely new object using the copy module. Reserve deepcopy() for situations where you actually need a copy because you’re about to mutate data and you don’t want your changes to affect the original object.
+> **NOTE : deepcopy() will fail with objects that involve system or runtime state (such as open files, network connections, threads, generators, and so on).**
+
+## 4.4 Object Representation and Printing
+
+```py
+import datetime
+
+d = datetime.date(2022, 11, 7)
+print(d)  # This calls the `str(d)` function of the object class
+
+# use the repr(x) function that creates a string with a representation
+# of the object that you would have to type out in source code to
+# create it. 
+repr_d = repr(d) 
+print(f"Date : {repr_d}") # Date : datetime.date(2022, 11, 7)
+print(f"Date : {d!r}")    # Date : datetime.date(2022, 11, 7)
+``` 
+> **NOTE : `!r` suffix can be added to a value to produce its repr() value instead of the normal string conversion.**
+
+## 4.5 First-Class Objects
+All objects in Python are said to be first-class. This means that all objects that can be assigned to a name can also be treated as data.
+
+Eg : The items dictionary now contains a function, a module, an exception, and a method of another object.
+
+```py
+import math
+
+items = {
+    "number": 42,
+    "text": "Hello World"
+}
+
+items["abs"] = abs
+items["math"] = math
+items["error"] = ValueError
+
+nums = [1, 2, 3, 4]
+items["append"] = nums.append
+
+# We can now use dict lookup instead of directly using 
+# the functions and objects
+a = items["abs"](-11)  # a = 11
+b = items["math"].sqrt(4)  # b = 2
+
+try:
+    x = int("x")
+except items["error"] as e:
+    print("Couldn't convert")
+
+items["append"](100)  # nums = [1, 2, 3, 4, 100]
+```
+<br>
+
+**Real life example :**
+
+Convert “ACME,100,490.10” into list with correct types.
+
+```py
+LINE = "ACME,100,490.10"
+
+types = [str, int, float]
+list_line = LINE.split(",")
+
+# zip gives like (<class 'str'>, 'ACME'). We can just so ty(item)
+my_list = [ty(item) for ty, item in zip(types, list_line)]
+
+#['ACME', 100, 490.1]
+```
+
+**We can rewrite :**  to avoid complex if/else structures
+```py
+if format == 'text':
+    formatter = TextFormatter()
+elif format == 'csv': 
+    formatter = CSVFormatter()
+elif format == 'html': 
+    formatter = HTMLFormatter()
+else:
+    raise RuntimeError('Bad format')
+```
+as
+```py
+_formats = {
+    'text' : TextFormatter,
+    'csv' : CSVFormatter,
+    'html' : HTMLFormatter
+}
+if format in _formats:
+    formatter = _formats[format]()
+```
+
+## 4.6 Object Protocols and Data Abstraction
+Most Python language features are defined by protocols.
+```py
+def compute_cost(unit_price, num_units): 
+    return unit_price * num_units
+```
+Here the function can accept a lot of data types. Some works and some fails. It depends on the implementation of the`*` operator object. ***Unlike a compiler for a static language, Python does not verify correct program behavior in advance.***
+
+ Instead, the behavior of an object is determined by a dynamic process that involves the dispatch of so-called “special” or “magic” methods. **The names of these special methods are always preceded and followed by double underscores (__) eg : `__init__()`**. The methods are automatically triggered by the interpreter as a program executes. For example, the operation `x * y` is carried out by a method `x.__mul__(y)`. These are hard wired.
+
+ These special methods are associated with different categories of core interpreter features. These catagories are called protocols.
+
+**In a user defined class we can implement these special methods to change the way the object behaves or add functionality.**
+
+### 4.6.1 Object Protocol
+For overall management of object.
+
+| Method                                | Description                                                  |
+| :------------------------------------ | ------------------------------------------------------------ |
+| `__new__(cls [,*args [,**kwargs]])`   | A static method called to create a new instance.             |
+| `__init__(self [,*args [,**kwargs]])` | Called to initialize a new instance after it’s been created. |
+| `__del__(self)`                       | Called when an instance is being destroyed.                  |
+| `__repr__(self)`                      | Create a string representation.                              |
+
+**[1].** The `__new__()` and `__init__()` methods are used together to create and initialize instances. When an object is created by calling SomeClass(args), it is translated into the following steps:
+
+```py
+# creates the object without calling the __init__() function
+my_list = MyWords.__new__(MyWords)  
+# then we call the __init__() function
+if isinstance(my_list, MyWords):
+    my_list.__init__("first_word")
+```
+<br>
+
+Use of `__new__()` implementation almost always indicates the presence of advanced magic related to instance creation (for example, it is used in class methods that want to bypass `__init__()` or in certain creational design patterns such as singletons or caching). The implementation of `__new__()` doesn’t necessarily need to return an instance of the class in question—if not, the subsequent call to `__init__()` on creation is skipped.
+
+**[2].** The `__del__()` method is invoked when an instance is about to be garbage-collected. This method is invoked only when an instance is no longer in use. Note that the statement` del x` only decrements the instance reference count and doesn’t necessarily result in a call to this function.  
+
+**[3].** The `__repr__()` method, called by the built-in `repr()` function, creates a string representation of an object that can be useful for debugging and printing. `eval()` the output of `repr` just recreates the object.
+
+### 4.6.2  Number Protocol
+
+TODO
+TODO
+
+### 4.6.3 Comparison Protocol
+`is` checks for identity. i.e memory address. It has nothing to do with value stored.
+
+| Method                 | Description                                                                                                                                                                                                                     |
+| ---------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `__bool__(self)`       | - Returns False or True for truth-value testing. <br> - If bool undefined `__len__()` fallback. <br> eg : `if a:` executes `if a__bool__()`:                                                                                    |
+| `__eq__(self, other)`  | self == other. <br> - It's for use with `==` and `!=` operators. First `__eq__()` checks with `is` to match `id()`. If its not same then it goes on to check the values. Because if `id()` is same then values have to be same. |
+| `__ne__(self, other)`  | self != other                                                                                                                                                                                                                   |
+| `__lt__(self, other)`  | self < other                                                                                                                                                                                                                    |
+| `__le__(selfm, other)` | self <= other                                                                                                                                                                                                                   |
+| `__gt__(self, other)`  | self > other                                                                                                                                                                                                                    |
+| `__ge__(self, other)`  | self >= other                                                                                                                                                                                                                   |
+| `__hash__(self)`       | Computes integer hash index                                                                                                                                                                                                     |
+Ordering is determined by (<, >, <=, >=) operators using the `__lt__()` and `__gt__()`. To evaluate `a < b`, interpreter first tries `a.__lt__(b)` except where b is subset of a (then `b.__gt__(a) is used`). If it's not implemented then interpreter tries reversed comparison using `b.__gt__(a)`. Same with >= and <=
+
+example : 
+```py
+a = 42
+b = 52.3
+
+a.__lt__(b)   # NotImplemented
+b.__gt__(a)   # True
+```
+<br>
+
+> **NOTE : It is not necessary for an ordered object to implement all of the comparison operations in Table 4.3. If you want to be able to sort objects or use functions such as `min() or max()`, then `__lt__()` must be minimally defined. If you are adding comparison operators to a user-defined class, the @total_ordering class decorator in the functools module may be of some use. It can generate all of the methods as long as you minimally implement `__eq__()` and one of the other comparisons.**
+
+**`__hash__()`** : It's defined on instances that are to be placed into a set or be used as keys in a mapping (dictionary). The value returned is an integer that should be the same for two instances that compare as equal. 
+- ` __eq__()` should always be defined together with `__hash__()`
+because the two methods work together. 
+> **NOTE : The value returned by `__hash__()` is typically used as an internal implementation detail of various data structures. However, it’s possible for two different objects to have the same hash value. Therefore, `__eq__()` is necessary to resolve potential collisions.**
+
+### 4.6.4 Conversion Protocol
+
+| Method                             | Description                          |
+| ---------------------------------- | ------------------------------------ |
+| `__str__()`                        | Conversion to string                 |
+| `__bytes__(self)`                  | Conversion to bytes                  |
+| `__format__(self, format_spec)`    | Creates a formatted representation   |
+| `__bool__(self)`                   | bool(self)                           |
+| `__int__(self)`, `__float__(self)` | int(self), float(self)               |
+| `__complex__(self)`                | complex(self)                        |
+| `__index__(self)`                  | Conversion to a integer index [self] |
+
+1. `__format__()` is called by `format()` function or `format()` method of strings.
+```py
+x = 42
+f'{x:>04d}'                 # Calls x.__format__('>04d')
+format(x, '>04d')           # Calls x.__format__('>04d')
+'x is {0:>04d}' .format(x)  # Calls x.__format__('>04d')
+print(x.__format__('>04d'))  #0042
+```
+2. Python never performs implicit type conversions using these methods. Thus, even if an object x implements an `__int__()` method, the expression 3 + x will still produce a TypeError. The only way to execute `__int__()` is through an explicit use of the int() function.
+
+3. The `__index__()` method performs an integer conversion of an object when it’s used in an operation that requires an integer value. This includes indexing in sequence operations. For example, if items is a list, performing an operation such as `items[x]` will attempt to execute `items[x.__index__()]` if x is not an integer. `__index__()` is also used in various base conversions such as oct(x) and hex(x).
+
+TODO (find examples)
+
+### 4.6.5 Container Protocol
+
+They are used by objects that want to implement containers of various kinds—lists, dicts, sets, and so on.
+
+| Method                          | Description                  |
+| ------------------------------- | ---------------------------- |
+| ` __len__(self)`                | Returns the length of `self` |
+| `__getitem__(self, key)`        | Returns `self[key]`          |
+| `__setitem__(self, key, value)` | Sets `self[key] = value`     |
+| ` __delitem__(self, key)`       | Deletes self[key]            |
+| `__contains__(self, obj)`       | obj in self                  |
+
+Example : 
+```py
+a = [1, 2, 3]    # a.__len__()
+len(a)           # x = a.__getitem__(2)
+x = a[2]         # x = a.__getitem__(2)
+a[1] = 7         # a.__setitem__(1,7)
+del a[2]         # a.__delitem__(2)
+5 in a           # a.__contains__(5)
+```
+<br>
+
+Slicing operations such as `x = s[i:j]` are also implemented using `__getitem__()`, `__setitem__()`, and `__delitem__()`. For slices, a special `slice` instance is passed as the key. 
+
+```py
+a = [1,2,3,4,5,6]
+x = a[1:5:2]          # x = a.__getitem__(slice(1, 5, 2))
+a[1:3] = [10,11,12] # a.__setitem__(slice(1, 3, None), [10, 11, 12])
+del a[1:4]          # a.__delitem__(slice(1, 4, None))
+```
+
+TODO - Multi-Dimensional Slices
+
+**NOTE :** No part of Python or its standard library make use of multidimensional slicing or the Ellipsis. Those features are reserved purely for third-party libraries and frameworks. Perhaps the most common place you would see them used is in a library such as `numpy`. 
+
+### 4.6.6 Iteration Protocol
+
+check - [iterator_protocol.py](./4_obj_types_protocols/iterator_protocol.py)
+
+- If an instance, obj, supports iteration, it provides a method, `obj.__iter__()`, that returns an iterator.  
+- The iterator `_iter`, in turn, implements a single method, `_iter.__next__()`, that returns the next object or raises `StopIteration` to signal the end of iteration.
+
+Implement `for i in my_list`
+
+```py
+my_list = [1, 2, 3, 4, 5]
+
+_iter = my_list.__iter__()  # this is the iterator object
+
+while True:
+    try:
+        i = _iter.__next__()
+        print(i)
+    except StopIteration:
+        break
+
+_iter_reversed = my_list.__reversed__()  # returns reversed iterator
+```
+`__reversed__()` is called by the built-in `reversed()` function.
+
+**[o]**  **A common implementation technique for iteration is to use a generator function involving `yield`.**
+
+```py
+class FRange:
+    def __init__(self, start, stop, step) -> None:
+        self.start = start
+        self.stop = stop
+        self.step = step
+
+    def __iter__(self):
+        x = self.start
+        while x < self.stop:
+            yield x  # adding items to the generator
+            x += self.step
+
+
+# Example use:
+nums = FRange(0.0, 1.0, 0.1)
+
+for i in nums:
+    print(f"{i:0.1f}")
+
+```
+Here FRange is an iterator class which returns a iterator (generator) object. ***This works because generator functions conform to the iteration protocol themselves.*** It’s a bit easier to implement an iterator in this way since you only have to worry about the `__iter__()` method. The rest of the iteration machinery is already provided by the generator.
+
+### 4.6.7 Attribute Protocol
+
+| Method                          | Description                                                                      |
+| ------------------------------- | -------------------------------------------------------------------------------- |
+| `__getattribute__(self, name)`  | returns the attribute `self.name`                                                |
+| `__getattr__(self,name)`        | Returns the attribute `self.name` if it’s not found through `__getattribute__()` |
+| `__setattr__(self,name, value)` | Sets the attribute `self.name = value`                                           |
+| `__delattr__(self,name)`        | Deletes the attribute `del self.name`                                            |
+
+Whenever an attribute is accessed, the `__getattribute__()` method is invoked. If the attribute is located, its value is returned. Otherwise, the `__getattr__()` method is invoked. The default behavior of `__getattr__()` is to raise an AttributeError exception. The `__setattr__()` method is always invoked when setting an attribute, and the `__delattr__()` method is always invoked when deleting an attribute.
+
+### 4.6.8 Function Protocol
+
+An object can emulate a function by providing the `__call__()` method. If an object, x, provides this method, it can be invoked like a function. That is, `x(arg1, arg2, ...)`invokes `x.__call__(arg1, arg2, ...)`.
+
+eg : Replicates the behaviour of `int()` method in int object
+```py
+class Int:
+    def __call__(self, string):
+        return int(string)
+
+
+integer = Int()
+print(integer("8"))
+```
+### 4.6.9 Context Manager Protocol
+
+| Method                            | Description                                                                                                                             |
+| --------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------- |
+| `__enter__(self)`                 | Called when entering a new context. The return value is placed in the variable listed with the as specifier to the with statement.      |
+| `__exit__(self, type, value, tb)` | Called when leaving a context. If an exception occurred, type, value, and tb have the exception type, value, and traceback information. |
+
+Summery :
+
+The `__enter__()` method is invoked when the with statement executes. The value returned by this method is placed into the variable specified with the optional as var specifier. The `__exit__()` method is called as soon as control flow leaves the block of statements associated with the with statement. As arguments,` __exit__()` receives the current exception type, value, and a traceback if an exception has been raised. If no errors are being handled, all three values are set to None. The `__exit__()` method should return True or False to indicate if a raised exception was handled or not. If True is returned, any pending exception is cleared and program execution continues normally with the first statement after the with block.
+
+---------------------------------------------------------------------------
 
