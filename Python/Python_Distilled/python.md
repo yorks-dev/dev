@@ -57,6 +57,11 @@
     - [4.6.7 Attribute Protocol](#467-attribute-protocol)
     - [4.6.8 Function Protocol](#468-function-protocol)
     - [4.6.9 Context Manager Protocol](#469-context-manager-protocol)
+- [CHAPTER 5 : Functions](#chapter-5--functions)
+  - [5.1 Default Arguments](#51-default-arguments)
+  - [5.2 Variadic Arguments](#52-variadic-arguments)
+  - [5.3 Keyword Arguments](#53-keyword-arguments)
+  - [5.4 Variadic Keyword Arguments](#54-variadic-keyword-arguments)
 
 
 
@@ -1567,3 +1572,83 @@ The `__enter__()` method is invoked when the with statement executes. The value 
 
 ---------------------------------------------------------------------------
 
+# CHAPTER 5 : Functions
+
+## 5.1 Default Arguments
+```py 
+def split(line, delimiter=','): 
+    statements
+```
+
+1. Once you specify a default parameter, all the following parameters must have a default value.
+2. Default parameter values are evaluated once when the function is first defined, not each time the function is called. This often leads to surprising behavior if mutable objects are used as a default.
+
+    ```py
+    def func(x, items=[]):
+        items.append(x)
+        return items
+    ```
+
+    > func(1)  -> [1]
+    > func(2)  -> [1, 2]
+    > func(3)  -> [1, 2, 3]
+
+    So better to use `items = None`.
+
+    **`NOTE` : *As a general practice, to avoid such surprises, only use immutable objects for default argument values—numbers, strings, Booleans, None, and so on.***
+
+## 5.2 Variadic Arguments
+
+Variadic arguments are acce-pted by using `*args` as the last argument.  All of the extra arguments are placed into the args variable as a tuple.
+```py
+def product(first, *args): 
+    result = first
+    for x in args:
+        result = result * x
+    return result
+```
+
+## 5.3 Keyword Arguments
+
+Function arguments can be supplied by explicitly naming each parameter and specifying a value.
+```py
+def func(w, x, y, z): 
+    statements
+
+func(x=3, y=22, w='hello', z=[1, 2])
+```
+The order of arguments does not matter.
+
+`RULE` : `func(positional, keyword)` all the positional arguments appear first, values are provided for all nonoptional arguments, and no argument receives more than one value.
+
+**Force the use of keyword arguments** : 
+All args after the `*` are compulory keyword args
+```py
+def read_data(filename, *, debug=False):
+    ...
+
+ata = read_data('Data.csv', True)        # ERROR: TypeError
+data = read_data('Data.csv', debug=True)  # Yes.
+```
+
+```py
+def product(first, *values, scale=1): 
+    result = first * scale
+    for val in values:
+        result = result * val 
+        return result
+
+result = product(2,3,4)             # Result = 24
+result = product(2,3,4, scale=10)   # Result = 240, (3, 4) in value
+```
+
+## 5.4 Variadic Keyword Arguments
+
+read : [arguments.py](./5_functions/arguments.py)
+
+If the **last argument of a function** definition is prefixed with `**`, all the additional keyword arguments (those that don’t match any of the other parameter names) are placed in a **dictionary** and passed to the function. **The order of items in this dictionary is guaranteed to match the order in which keyword arguments were provided**.
+
+```py
+# we force engine_type and autopilot to be keyword type args and the rest goes into **kwargs
+def make_car(self, make_year, model, *, engine_type, autopilot, **kwargs):
+```
